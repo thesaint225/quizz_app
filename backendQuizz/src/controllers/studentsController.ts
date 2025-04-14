@@ -5,7 +5,6 @@ import {
   studentSchemaZod,
   StudentInput,
 } from "../models/studentsModel";
-import { error } from "console";
 
 // @description createStudents
 // @route       api/v1/students
