@@ -4,7 +4,7 @@ import router from "./routes/studentsRoutes";
 const app: Application = express();
 const PORT = 5000;
 
-// Mildeware to parse JSON
+// Middleware to parse JSON
 app.use(express.json());
 
 // Mount route
