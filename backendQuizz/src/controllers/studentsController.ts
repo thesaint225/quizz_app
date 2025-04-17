@@ -7,7 +7,7 @@ import {
 } from "../models/studentsModel";
 
 // @description createStudents
-// @route       api/v1/students
+// @route       POST/api/v1/students
 // @access      public
 
 export const createStudent = asyncHandler(
@@ -28,6 +28,21 @@ export const createStudent = asyncHandler(
     res.status(201).json({
       success: true,
       data: student,
+    });
+  }
+);
+
+// @description AllStudents
+// @route       GET/api/v1/students
+// @access      public
+
+export const getStudents = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const students = await Student.find();
+    res.status(200).json({
+      success: true,
+      count: students.length,
+      data: students,
     });
   }
 );
