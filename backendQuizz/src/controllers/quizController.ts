@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { QuizModel, quizSchemaZod } from "../models/quizz";
 import asyncHandler from "express-async-handler";
-import path from "path";
 
+// @description   create
+//@route
+// @access        public
 export const createQuiz = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
     const parseResult = quizSchemaZod.safeParse(req.body);
 
     if (!parseResult.success) {
@@ -29,6 +31,28 @@ export const createQuiz = asyncHandler(
     res.status(201).json({
       success: true,
       data: quiz,
+    });
+  }
+);
+
+export const getAllQuiz = asyncHandler(
+  async (_req: Request, res: Response, _next: NextFunction) => {
+    const allQuiz = await QuizModel.find();
+
+    // Add a fallback when allQuiz is empty
+
+    if (!allQuiz || allQuiz.length === 0) {
+      res.status(200).json({
+        success: true,
+        message: "no quiz found ",
+        data: [],
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: allQuiz.length,
+      data: allQuiz,
     });
   }
 );
