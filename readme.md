@@ -102,3 +102,59 @@ POST /api/quiz/:quizId/submit
 
 GET /api/result/:studentId
 --> Return score + quiz summary
+
+let work with this
+
+1. Student logs in --> AuthController
+2. Starts a quiz --> QuizController
+3. Receives questions --> Quiz + Questions
+4. Saves answers --> SessionController
+5. Submits quiz --> ResultController
+6. Sees results --> Result
+
+🔧 Backend Structure (Big Picture)
+
+1. Student
+   Represents the person taking the quiz.
+
+Fields: studentId, email, securityAnswer
+
+Use: To identify and validate users
+
+✅ Used during login and when submitting answers
+
+2. Quiz
+   Represents a quiz as a whole.
+
+Fields: title, quizCode, duration, questions[]
+
+Use: Stores quiz settings and links to its questions
+
+✅ Used to start a quiz and control the timer
+
+3. Question
+   Individual questions within a quiz.
+
+Fields: quizId, text, options[], correct
+
+Use: Stores each question and the correct answer
+
+✅ Used during the quiz to show options and check answers later
+
+4. Session / Answers
+   Represents a student’s attempt at a quiz.
+
+Fields: studentId, quizId, answers[], status, startTime, currentIndex
+
+Use: Tracks the student’s progress and answers
+
+✅ Used for auto-saving answers and resuming quizzes
+
+5. Result
+   Stores final scores and summaries.
+
+Fields: studentId, quizId, score, submittedAt, etc.
+
+Use: Displays result after quiz is submitted
+
+✅ Used for the result screen / summary

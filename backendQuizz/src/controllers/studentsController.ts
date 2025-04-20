@@ -5,6 +5,7 @@ import {
   studentSchemaZod,
   StudentInput,
 } from "../models/studentsModel";
+import { parse } from "path";
 
 // @description createStudents
 // @route       POST/api/v1/students
@@ -15,16 +16,24 @@ export const createStudent = asyncHandler(
     const parseResult = studentSchemaZod.safeParse(req.body);
 
     if (!parseResult.success) {
+      const errors = parseResult.error.errors.map((err) => ({
+        path: err.path.join("."),
+        message: err.message,
+      }));
       res.status(400).json({
         success: false,
-        errors: parseResult.error.format(),
+        errors,
       });
       return;
     }
 
+    // let destructure the parseResult.data and renaming to something more descriptive
+
+    const { data: validatedStudentData } = parseResult;
+
     // if validation validation is successfully , create Student
 
-    const student = await Student.create(parseResult.data);
+    const student = await Student.create(validatedStudentData);
     res.status(201).json({
       success: true,
       data: student,
