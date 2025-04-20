@@ -48,6 +48,15 @@ export const createStudent = asyncHandler(
 export const getStudents = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const students = await Student.find();
+
+    // Add a fallback when students is empty
+    if (!students || students.length === 0) {
+      res.status(200).json({
+        success: true,
+        message:"students not found "
+        data:[]
+      });
+    }
     res.status(200).json({
       success: true,
       count: students.length,
