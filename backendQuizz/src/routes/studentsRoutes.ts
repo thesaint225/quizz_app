@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { createStudent, getStudents } from "../controllers/studentsController";
 
-const router = Router();
+const studentsRouter = Router();
 
 // @route POST  /api/v1/students
-router.post("/", createStudent).get("/", getStudents);
+studentsRouter.post("/", createStudent).get("/", getStudents);
 
-export default router;
+export default studentsRouter;

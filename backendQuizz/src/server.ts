@@ -1,5 +1,5 @@
 import express, { Application, Request, Response } from "express";
-import router from "./routes/studentsRoutes";
+import studentRouter from "./routes/studentsRoutes";
 import QuizRouter from "./routes/quizRoutes";
 import connectedDb from "./config/db";
 
@@ -13,7 +13,7 @@ app.use(express.json());
 connectedDb();
 
 // Mount route
-app.use("/api/v1/students", router);
+app.use("/api/v1/students", studentRouter);
 app.use("/api/v1/quizzes", QuizRouter);
 
 app.get("/", (req: Request, res: Response) => {
