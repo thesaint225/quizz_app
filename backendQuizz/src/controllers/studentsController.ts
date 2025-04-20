@@ -53,8 +53,8 @@ export const getStudents = asyncHandler(
     if (!students || students.length === 0) {
       res.status(200).json({
         success: true,
-        message:"students not found "
-        data:[]
+        message: "students not found ",
+        data: [],
       });
     }
     res.status(200).json({

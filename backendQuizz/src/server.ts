@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import router from "./routes/studentsRoutes";
+import QuizRouter from "./routes/quizRoutes";
 import connectedDb from "./config/db";
 
 const app: Application = express();
@@ -13,6 +14,7 @@ connectedDb();
 
 // Mount route
 app.use("/api/v1/students", router);
+app.use("/api/v1/quizzes", QuizRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("welcome ");

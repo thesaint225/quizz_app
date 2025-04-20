@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { createQuiz, getAllQuiz } from "../controllers/quizController";
 
-const router = Router();
+const QuizRouter = Router();
 
-router.post("/", createQuiz).get("/", getAllQuiz);
+QuizRouter.post("/", createQuiz).get("/", getAllQuiz);
 
-export default router;
+export default QuizRouter;
