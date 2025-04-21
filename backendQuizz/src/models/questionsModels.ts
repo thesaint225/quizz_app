@@ -61,4 +61,4 @@ const questionSchema = new Schema<IQuestions>(
 
 const QuestionsModel = mongoose.model<IQuestions>("Question", questionSchema);
 
-export { questionSchema, QuestionsModel };
+export { questionSchema, QuestionsModel, questionZodSchema };

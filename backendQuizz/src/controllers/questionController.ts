@@ -37,3 +37,29 @@ export const createQuestion = asyncHandler(
     });
   }
 );
+
+// description     get all questions for the quiz
+// @route          GET/api/v1/questions
+// @access          public
+
+export const getAllQuestions = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const allQuestions = await QuestionsModel.find();
+
+    // please add a fallback when question is empty
+    if (!allQuestions || allQuestions.length === 0) {
+      res.status(200).json({
+        success: true,
+        message: "no questions found  ",
+        data: [],
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      count: allQuestions.length,
+      data: allQuestions,
+    });
+  }
+);
