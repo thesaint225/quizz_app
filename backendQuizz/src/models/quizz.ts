@@ -8,7 +8,8 @@ const quizSchemaZod = z.object({
   duration: z.number().min(1, { message: "Duration must be at least 1 min" }),
   question: z
     .array(z.string())
-    .min(1, { message: "At Least one question ID is " }),
+    .min(1, { message: "At Least one question ID is " })
+    .optional(),
 });
 
 // this is the TypeScript type for input validation
@@ -36,7 +37,7 @@ const quizSchema = new Schema<IQuiz>(
           type: mongoose.Schema.Types.ObjectId,
           //Make sure this matches your Question model
           ref: "Question",
-          required: true,
+          require: false,
         },
       ],
       require: true,

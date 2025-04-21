@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { QuizModel, quizSchemaZod } from "../models/quizz";
 import asyncHandler from "express-async-handler";
 
-// @description   create
-//@route
+// @description   createQuiz
+//@route         POST/api/v1/quizzes
 // @access        public
 export const createQuiz = asyncHandler(
   async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
@@ -34,6 +34,10 @@ export const createQuiz = asyncHandler(
     });
   }
 );
+
+// @description  getAllQuizzes
+// @route        GET/api/v1/quizzes
+// @access       public
 
 export const getAllQuiz = asyncHandler(
   async (_req: Request, res: Response, _next: NextFunction) => {
