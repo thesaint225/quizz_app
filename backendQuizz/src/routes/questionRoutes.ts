@@ -12,3 +12,5 @@ questionRouter.post("/", createQuestion);
 // @desc   get all questions
 // @route  GET/api/v1/questions
 questionRouter.get("/", getAllQuestions);
+
+export default questionRouter;

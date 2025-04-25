@@ -5,7 +5,6 @@ import {
   studentSchemaZod,
   StudentInput,
 } from "../models/studentsModel";
-import { parse } from "path";
 
 // @description createStudents
 // @route       POST/api/v1/students

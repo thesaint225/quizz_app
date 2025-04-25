@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from "express";
 import studentsRouter from "./routes/studentsRoutes";
 import QuizRouter from "./routes/quizRoutes";
 import connectedDb from "./config/db";
+import questionRouter from "./routes/questionRoutes";
 
 const app: Application = express();
 const PORT = 5000;
@@ -15,6 +16,7 @@ connectedDb();
 // Mount route
 app.use("/api/v1/students", studentsRouter);
 app.use("/api/v1/quizzes", QuizRouter);
+app.use("/api/v1/questions", questionRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("welcome ");

@@ -1,9 +1,13 @@
 import { Router } from "express";
 import { createStudent, getStudents } from "../controllers/studentsController";
+import { loginStudent, registerStudent } from "../controllers/authController";
 
 const studentsRouter = Router();
-
+// @desc   Create a new student
 // @route POST  /api/v1/students
-studentsRouter.post("/", createStudent).get("/", getStudents);
+studentsRouter.post("/", createStudent);
+// @desc   get all students
+// @route  POST/api/v1/students
+studentsRouter.get("/", getStudents);
 
 export default studentsRouter;
