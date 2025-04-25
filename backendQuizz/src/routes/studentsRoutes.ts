@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { createStudent, getStudents } from "../controllers/studentsController";
-import { loginStudent, registerStudent } from "../controllers/authController";
 
 const studentsRouter = Router();
 // @desc   Create a new student

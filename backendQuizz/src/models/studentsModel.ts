@@ -7,7 +7,8 @@ const studentSchemaZod = z.object({
   studentId: z
     .string()
     .min(1, { message: "Student ID is require" })
-    .max(100, { message: "Student ID is too long " }),
+    .max(100, { message: "Student ID is too long " })
+    .optional(),
   email: z.string().email({ message: "Invalid email address" }),
   password: z
     .string()
@@ -18,7 +19,7 @@ const studentSchemaZod = z.object({
 type StudentInput = z.infer<typeof studentSchemaZod>;
 
 interface IStudent extends Document {
-  studentId: string;
+  studentId?: string;
   email: string;
   password: string;
   resetPasswordToken?: string;
@@ -29,11 +30,11 @@ interface IStudent extends Document {
 
 const studentSchema = new Schema<IStudent>(
   {
-    studentId: { type: String, required: true, unique: true, trim: true },
-    email: { type: String, required: true },
+    studentId: { type: String, required: false, unique: true, trim: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     resetPasswordToken: String,
-    resetPasswordExpires: String,
+    resetPasswordExpires: Date,
   },
   {
     timestamps: true,

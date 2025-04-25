@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { Student } from "../models/studentsModel";
+import { Student, studentSchemaZod } from "../models/studentsModel";
 import asyncHandler from "express-async-handler";
 
 // Number of salt rounds for passwords hashing - higher is more secure slower
@@ -13,10 +13,28 @@ const saltRounds = 10;
 
 export const registerStudent = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    // step 1 :input validation
+    // validate the request body against our studentSchema
+    const parseResult = studentSchemaZod.safeParse(req.body);
+
+    // if validation fails (return errors object)
+    if (!parseResult.success) {
+      const errors = parseResult.error.errors.map((err) => ({
+        path: err.path.join(""),
+        message: err.message,
+      }));
+      res.status(400).json({
+        success: false,
+        errors,
+      });
+      return;
+    }
+
     // 1.destructure email and password form request body
-    const { email, password } = req.body;
+    const { data: studentData } = parseResult;
+    const { email, password } = studentData;
     //2.
-    if (!email || password) {
+    if (!email || !password) {
       res.status(400);
       throw new Error("Please provide both email and password ");
     }
