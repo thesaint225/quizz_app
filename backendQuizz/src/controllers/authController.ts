@@ -4,7 +4,6 @@ import { Student, studentSchemaZod } from "../models/studentsModel";
 import asyncHandler from "express-async-handler";
 
 // Number of salt rounds for passwords hashing - higher is more secure slower
-const saltRounds = 10;
 
 /**
  * Register a new student
@@ -45,13 +44,14 @@ export const registerStudent = asyncHandler(
       res.status(400);
       throw new Error("email already registered ");
     }
-    //   4. Hash the password for security
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // //   4. Hash the password for security
+    // const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // 5.create new student in database
     const newStudent = await Student.create({
       email,
-      password: hashedPassword,
+      password,
     });
 
     // 6.return success response (201 created)

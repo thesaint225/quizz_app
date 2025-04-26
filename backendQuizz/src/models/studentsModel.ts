@@ -30,7 +30,7 @@ interface IStudent extends Document {
 
 const studentSchema = new Schema<IStudent>(
   {
-    studentId: { type: String, required: false, unique: true, trim: true },
+    studentId: { type: String, required: false, trim: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     resetPasswordToken: String,

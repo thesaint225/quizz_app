@@ -16,3 +16,13 @@ authRouter.post("/register", registerStudent);
 authRouter.post("/login", loginStudent);
 
 export default authRouter;
+
+/**
+ * {
+   {
+    "email": "dieudonne@gmail.com",
+  "password": "test12rf%^$35"
+
+}
+}
+ */
