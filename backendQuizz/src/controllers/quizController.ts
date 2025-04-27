@@ -22,15 +22,41 @@ export const createQuiz = asyncHandler(
     }
 
     // let destructure the parseResult.data and renaming to something more descriptive
+    const validatedData = parseResult.data;
+    const { title, quizCode, duration } = validatedData;
 
-    const { data: validatedQuizData } = parseResult;
+    // check for  duplicate quiz code
 
-    // if validation is successful create quiz
+    const existingQuiz = await QuizModel.findOne({ quizCode });
+    if (existingQuiz) {
+      res.status(409).json({
+        success: false,
+        message: `quiz code ${quizCode} already exists`,
+      });
+    }
 
-    const quiz = await QuizModel.create(validatedQuizData);
+    // create new Quiz
+    const newQuiz = await QuizModel.create({
+      title,
+      quizCode,
+      duration,
+      questions: [],
+      createdAt: new Date(),
+    });
+
+    // Return success response with selected fields
+
     res.status(201).json({
       success: true,
-      data: quiz,
+      message: "Quiz created successfully",
+      data: {
+        id: newQuiz._id,
+        title: newQuiz.title,
+        quizCode: newQuiz.quizCode,
+        duration: newQuiz.duration,
+        questionCount: 0,
+        createdAt: newQuiz.createdAt,
+      },
     });
   }
 );
