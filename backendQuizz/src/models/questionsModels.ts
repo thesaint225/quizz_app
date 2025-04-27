@@ -5,7 +5,6 @@ import mongoose, { Document, Schema } from "mongoose";
 
 const questionZodSchema = z
   .object({
-    quizId: z.string().min(1, { message: "Quiz ID is required" }),
     text: z.string().min(1, { message: "Question text is required" }),
     options: z
       .array(z.string())
@@ -37,10 +36,7 @@ const questionSchema = new Schema<IQuestions>(
       ref: "Quiz",
       required: true,
     },
-    text: {
-      type: String,
-      required: true,
-    },
+    text: { type: String, required: true },
     options: {
       type: [String],
       required: true,
@@ -49,10 +45,7 @@ const questionSchema = new Schema<IQuestions>(
         "At least 2 options required",
       ],
     },
-    correct: {
-      type: String,
-      required: true,
-    },
+    correct: { type: String, required: true },
   },
   {
     timestamps: true,
