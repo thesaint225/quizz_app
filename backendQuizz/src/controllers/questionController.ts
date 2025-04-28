@@ -12,19 +12,29 @@ import {
 
 export const createQuestion = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    //1. INPUT VALIDATION
+    // validate request body against our zodSchema
     const parseResult = questionZodSchema.safeParse(req.body);
+
+    // if validation fails return error
     if (!parseResult.success) {
-      const errors = parseResult.error.errors.map((err) => ({
-        path: err.path.join("."),
+      const formattedErrors = parseResult.error.errors.map((err) => ({
+        //show which field failed
+        field: err.path.join("."),
+        // human readable error message
         message: err.message,
+        // standardized error code
+        errCode: `Validation_${err.code.toUpperCase}`,
       }));
       res.status(400).json({
         success: false,
-        errors,
+        message: "Quiz validation failed",
+        errors: formattedErrors,
       });
       return;
     }
-    // let destructure  the parseResult.data and renaming to something more declarative
+    // 2.EXTRACT VALIDATED DATA
+    // destructure from the validated data
     const { data: validatedQuestion } = parseResult;
 
     // if validation is successfully create question
