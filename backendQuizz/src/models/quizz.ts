@@ -1,4 +1,6 @@
+// Import ZOD library for schema validation
 import { z } from "zod";
+// Import mongoose and necessary types for MongoDB interaction
 import mongoose, { Document, Schema } from "mongoose";
 
 /**

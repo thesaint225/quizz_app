@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import {
   QuestionsModel,
   questionZodSchema,
-  IQuestions,
+  // IQuestions,
 } from "../models/questionsModels";
 
 // @description  create new question for quiz
