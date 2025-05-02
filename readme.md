@@ -158,3 +158,59 @@ Fields: studentId, quizId, score, submittedAt, etc.
 Use: Displays result after quiz is submitted
 
 ✅ Used for the result screen / summary
+
+:
+
+📚 Core Features of the Quiz App
+🧩 Core Flow (Backend)
+1.Student Login
+
+Verify email and password.
+If valid, respond with student information (JWT not used for now).
+
+2.Start Quiz
+Student selects a quiz by quiz code or ID.
+Backend responds with:
+Quiz title
+First question
+Quiz duration (timer)
+
+3.Save Answers (During Quiz)
+Student answers a question.
+Backend saves the answer in the Session for progress tracking.
+Backend updates the currentIndex to know the student's current question.
+
+4.Submit Quiz
+Student presses "Submit" to complete the quiz.
+Backend:
+Marks the session as "submitted".
+Calculates the score by comparing the student's answers to the correct ones.
+Saves the score and a summary into the Result collection.
+
+5.Show Result
+Student can view:
+Total score
+Quiz summary (such as correct and incorrect answers)
+
+📂 Folders Handling Each Step
+
+Feature Controller File
+Login controllers/authController.ts
+Start Quiz controllers/quizController.ts
+Save Answers controllers/sessionController.ts
+Submit Quiz controllers/resultController.ts
+Show Result controllers/resultController.ts
+
+Data Flow for model :
+
+Client sends data →
+
+Zod validates input →
+
+TypeScript checks types →
+
+Mongoose validates schema →
+
+Pre-hooks run final checks →
+
+Data saved to MongoDB"
