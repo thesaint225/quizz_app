@@ -1,8 +1,8 @@
 // Import mongoose components
 
-import mongoose, { Schema, model, Document } from "mongoose";
-import { Student } from "./studentsModel";
-import { questionSchema, QuestionsModel } from "./questionsModels";
+import mongoose, { Schema, model, Document } from 'mongoose';
+import { Student } from './studentsModel';
+import { questionSchema, QuestionsModel } from './questionsModels';
 
 /**
  * MONGOOSE INTERFACE
@@ -23,7 +23,9 @@ interface ISession extends Document {
     answer: string;
   }>;
   // quiz state
-  status: "in-progress" | "completed" | "failed";
+  status: 'in-progress' | 'completed' | 'failed';
+  // when quiz started
+  startedAt?: Date;
   //   when quiz was submitted
   endTime?: Date;
   //   auto-added by timeStamp
@@ -36,13 +38,13 @@ interface ISession extends Document {
  * Defines how the session  is  stored in MongoDB with validation
  */
 
-const session = new Schema<ISession>(
+const sessionSchema = new Schema<ISession>(
   {
     // References the student taking this section
     studentId: {
       type: Schema.Types.ObjectId,
       ref: Student,
-      required: [true, "Student ID is required "],
+      required: [true, 'Student ID is required '],
       // improved query performance
       index: true,
     },
@@ -51,7 +53,7 @@ const session = new Schema<ISession>(
     quizId: {
       type: Schema.Types.ObjectId,
       ref: QuestionsModel,
-      required: [true, "Quiz ID is required"],
+      required: [true, 'Quiz ID is required'],
       index: true,
     },
 
@@ -61,11 +63,11 @@ const session = new Schema<ISession>(
         questionId: {
           type: Schema.Types.ObjectId,
           ref: questionSchema,
-          required: [true, "Answer text is required "],
+          required: [true, 'Answer text is required '],
         },
         answer: {
           type: String,
-          required: [true, "Answer text is required"],
+          required: [true, 'Answer text is required'],
           // remove white space
           trim: true,
         },
@@ -75,10 +77,10 @@ const session = new Schema<ISession>(
     status: {
       type: String,
       enum: {
-        values: ["in-progress", "completed", "failed"],
-        message: "{VALUE}  must be either in-progress,completed or failed",
+        values: ['in-progress', 'completed', 'failed'],
+        message: '{VALUE}  must be either in-progress,completed or failed',
       },
-      default: "in-progress",
+      default: 'in-progress',
     },
 
     // Tracks when the quiz was submitted / end
@@ -97,7 +99,7 @@ const session = new Schema<ISession>(
           // if for some reason createAt  doesn't exist ,allow it
           return true;
         },
-        message: "End time must be after the session start time (createdAt)",
+        message: 'End time must be after the session start time (createdAt)',
       },
     },
   },
@@ -109,3 +111,8 @@ const session = new Schema<ISession>(
     toObject: { virtuals: true },
   }
 );
+
+// 3.Add Index for better Query Performance
+sessionSchema.index({ studentId: 1, quizId: 1 }, { unique: true });
+
+export const SessionModel = model<ISession>('Session', sessionSchema);
