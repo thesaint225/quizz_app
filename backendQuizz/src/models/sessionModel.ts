@@ -1,5 +1,4 @@
 // Import mongoose components
-
 import mongoose, { Schema, model, Document } from 'mongoose';
 import { Student } from './studentsModel';
 import { questionSchema, QuestionsModel } from './questionsModels';
