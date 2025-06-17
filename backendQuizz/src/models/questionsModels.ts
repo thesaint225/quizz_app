@@ -1,7 +1,7 @@
 // Import Zod library for schema validation
-import { z } from "zod";
+import { z } from 'zod';
 // Import mongoose and necessary types for MongoDB interaction
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
 /**
  * ZOD VALIDATION
@@ -11,18 +11,18 @@ import mongoose, { Document, Schema } from "mongoose";
 
 const questionZodSchema = z
   .object({
-    quizId: z.string().min(1, { message: "Quiz ID is required" }),
+    quizId: z.string().min(1, { message: 'Quiz ID is required' }),
     // validate "text" field must  be non-empty string
-    text: z.string().min(1, { message: "Question text is required" }),
+    text: z.string().min(1, { message: 'Question text is required' }),
     // validate "options" must be an array with at least 2 string
     options: z
       .array(z.string())
-      .min(2, { message: "At least two options are required" }),
-    correct: z.string().min(1, { message: "Correct answer is required" }),
+      .min(2, { message: 'At least two options are required' }),
+    correct: z.string().min(1, { message: 'Correct answer is required' }),
   })
   .refine((data) => data.options.includes(data.correct), {
-    path: ["correct"],
-    message: "Correct answer must be one of the options",
+    path: ['correct'],
+    message: 'Correct answer must be one of the options',
   });
 
 /**
@@ -55,23 +55,23 @@ const questionSchema = new Schema<IQuestion>(
   {
     quizId: {
       type: Schema.Types.ObjectId,
-      ref: "Quiz",
-      required: [true, "Quiz reference is required "],
+      ref: () => 'Quiz',
+      required: [true, 'Quiz reference is required '],
     },
 
     // Question text itself
-    text: { type: String, required: [true, "Question text is required "] },
+    text: { type: String, required: [true, 'Question text is required '] },
 
     // Array of possible answers
     options: {
       type: [String],
-      required: [true, "options are required"],
+      required: [true, 'options are required'],
       validate: {
         validator: (options: string[]) => options.length >= 2,
-        message: "At least 2 options are required",
+        message: 'At least 2 options are required',
       },
     },
-    correct: { type: String, required: [true, "Correct answer is required "] },
+    correct: { type: String, required: [true, 'Correct answer is required '] },
   },
   {
     timestamps: true,
@@ -83,7 +83,7 @@ const questionSchema = new Schema<IQuestion>(
  * Runs validation before updating an existing question document
  */
 
-questionSchema.pre("findOneAndUpdate", async function (next) {
+questionSchema.pre('findOneAndUpdate', async function (next) {
   // Get the updated data from request
   const update = this.getUpdate() as any;
   // both correct answer and options  are being updates
@@ -105,7 +105,7 @@ questionSchema.pre("findOneAndUpdate", async function (next) {
   if (update.correct && update.options) {
     // check if new correct answer  exists in new  options
     if (!update.options.includes(update.correct)) {
-      throw new Error("Correct answer must be one of the provided options");
+      throw new Error('Correct answer must be one of the provided options');
     }
   }
 
@@ -119,17 +119,17 @@ questionSchema.pre("findOneAndUpdate", async function (next) {
     // 2. Now TypeScript knows doc has an 'options' property
     // First check if document exists
     if (!doc) {
-      throw new Error("Question not found");
+      throw new Error('Question not found');
     }
 
     if (!doc.options.includes(update.correct)) {
-      throw new Error("Correct answer must be one of the provided answers");
+      throw new Error('Correct answer must be one of the provided answers');
     }
   }
 
   next();
 });
 
-const QuestionsModel = mongoose.model<IQuestion>("Question", questionSchema);
+const QuestionsModel = mongoose.model<IQuestion>('Question', questionSchema);
 
 export { questionSchema, QuestionsModel, questionZodSchema };

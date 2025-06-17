@@ -1,7 +1,7 @@
 // Import ZOD library for schema validation
-import { z } from "zod";
+import { z } from 'zod';
 // Import mongoose and necessary types for MongoDB interaction
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
 /**
  * Zod Validation Schema
@@ -10,18 +10,18 @@ import mongoose, { Document, Schema } from "mongoose";
 const quizSchemaZod = z.object({
   title: z
     .string()
-    .min(1, { message: "Title is required" })
-    .max(100, { message: "Title cannot exceed 100 characters" }),
+    .min(1, { message: 'Title is required' })
+    .max(100, { message: 'Title cannot exceed 100 characters' }),
 
   quizCode: z
     .string()
-    .min(3, { message: "Quiz code must be at least 3 characters" })
-    .max(20, { message: "Quiz code cannot exceed 20 characters" }),
+    .min(3, { message: 'Quiz code must be at least 3 characters' })
+    .max(20, { message: 'Quiz code cannot exceed 20 characters' }),
 
   duration: z
     .number()
-    .min(1, { message: "Duration must be at least 1 minute" })
-    .max(300, { message: "Duration cannot exceed 300 minutes" }),
+    .min(1, { message: 'Duration must be at least 1 minute' })
+    .max(300, { message: 'Duration cannot exceed 300 minutes' }),
 });
 
 /**
@@ -53,28 +53,28 @@ const quizSchema = new Schema<IQuiz>(
   {
     title: {
       type: String,
-      required: [true, "Title is required"],
+      required: [true, 'Title is required'],
       trim: true,
-      maxlength: [100, "Title cannot exceed 100 characters"],
+      maxlength: [100, 'Title cannot exceed 100 characters'],
     },
     quizCode: {
       type: String,
-      required: [true, "Quiz code is required"],
+      required: [true, 'Quiz code is required'],
       unique: true,
-      minlength: [3, "Quiz code must be at least 3 characters"],
-      maxlength: [20, "Quiz code cannot exceed 20 characters"],
+      minlength: [3, 'Quiz code must be at least 3 characters'],
+      maxlength: [20, 'Quiz code cannot exceed 20 characters'],
     },
     duration: {
       type: Number,
-      required: [true, "Duration is required"],
-      min: [1, "Duration must be at least 1 minute"],
-      max: [300, "Duration cannot exceed 300 minutes"],
+      required: [true, 'Duration is required'],
+      min: [1, 'Duration must be at least 1 minute'],
+      max: [300, 'Duration cannot exceed 300 minutes'],
     },
 
     questions: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Question", // References the Question model
+        ref: () => 'Question', // References the Question model
         default: [], // Starts empty
       },
     ],
@@ -89,7 +89,7 @@ const quizSchema = new Schema<IQuiz>(
  * Virtual Property: questionCount
  * Returns the number of questions without loading all question documents
  */
-quizSchema.virtual("questionCount").get(function (this: IQuiz) {
+quizSchema.virtual('questionCount').get(function (this: IQuiz) {
   return this.questions.length;
 });
 
@@ -98,7 +98,7 @@ quizSchema.virtual("questionCount").get(function (this: IQuiz) {
  * Ensures quizCode remains unique before saving
  */
 
-quizSchema.pre("save", async function (next) {
+quizSchema.pre('save', async function (next) {
   const existingQuiz = await mongoose.models.Quiz.findOne({
     quizCode: this.quizCode,
     // Exclude current document during updates
@@ -113,6 +113,6 @@ quizSchema.pre("save", async function (next) {
 
 // export the mongoose model
 
-const QuizModel = mongoose.model<IQuiz>("Quiz", quizSchema);
+const QuizModel = mongoose.model<IQuiz>('Quiz', quizSchema);
 
 export { QuizModel, quizSchema, quizSchemaZod };
