@@ -1,7 +1,5 @@
 // Import mongoose components
 import mongoose, { Schema, model, Document } from 'mongoose';
-import { Student } from './studentsModel';
-import { questionSchema, QuestionsModel } from './questionsModels';
 
 /**
  * MONGOOSE INTERFACE
@@ -42,7 +40,7 @@ const sessionSchema = new Schema<ISession>(
     // References the student taking this section
     studentId: {
       type: Schema.Types.ObjectId,
-      ref: Student,
+      ref: () => 'Student',
       required: [true, 'Student ID is required '],
       // improved query performance
       index: true,
@@ -51,7 +49,7 @@ const sessionSchema = new Schema<ISession>(
     //   Reference to quiz being attempted
     quizId: {
       type: Schema.Types.ObjectId,
-      ref: QuestionsModel,
+      ref: () => 'Question',
       required: [true, 'Quiz ID is required'],
       index: true,
     },
@@ -61,7 +59,7 @@ const sessionSchema = new Schema<ISession>(
       {
         questionId: {
           type: Schema.Types.ObjectId,
-          ref: questionSchema,
+          ref: () => 'Question',
           required: [true, 'Answer text is required '],
         },
         answer: {
