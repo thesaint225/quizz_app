@@ -1,6 +1,8 @@
-import { Request, Response, NextFunction } from "express";
-import { QuizModel, quizSchemaZod } from "../models/quizz";
-import asyncHandler from "express-async-handler";
+import { Request, Response, NextFunction } from 'express';
+import { Quiz } from '../models/quizz';
+import { quizSchemaZod } from '../schemas/validation/quiz.validation';
+import { QuizInput } from '../schemas/types/quiz.type';
+import asyncHandler from 'express-async-handler';
 
 // @description   createQuiz
 //@route         POST/api/v1/quizzes
@@ -11,7 +13,7 @@ export const createQuiz = asyncHandler(
 
     if (!parseResult.success) {
       const errors = parseResult.error.errors.map((err) => ({
-        path: err.path.join("."),
+        path: err.path.join('.'),
         message: err.message,
       }));
       res.status(400).json({
@@ -27,7 +29,7 @@ export const createQuiz = asyncHandler(
 
     // check for  duplicate quiz code
 
-    const existingQuiz = await QuizModel.findOne({ quizCode });
+    const existingQuiz = await Quiz.findOne({ quizCode });
     if (existingQuiz) {
       res.status(409).json({
         success: false,
@@ -36,7 +38,7 @@ export const createQuiz = asyncHandler(
     }
 
     // create new Quiz
-    const newQuiz = await QuizModel.create({
+    const newQuiz = await Quiz.create({
       title,
       quizCode,
       duration,
@@ -48,7 +50,7 @@ export const createQuiz = asyncHandler(
 
     res.status(201).json({
       success: true,
-      message: "Quiz created successfully",
+      message: 'Quiz created successfully',
       data: {
         id: newQuiz._id,
         title: newQuiz.title,
@@ -67,14 +69,14 @@ export const createQuiz = asyncHandler(
 
 export const getAllQuiz = asyncHandler(
   async (_req: Request, res: Response, _next: NextFunction) => {
-    const allQuiz = await QuizModel.find();
+    const allQuiz = await Quiz.find();
 
     // Add a fallback when allQuiz is empty
 
     if (!allQuiz || allQuiz.length === 0) {
       res.status(200).json({
         success: true,
-        message: "no quiz found ",
+        message: 'no quiz found ',
         data: [],
       });
     }

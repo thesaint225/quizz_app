@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { IStudent } from '../interfaces/student.interface';
+import { IStudent } from './interfaces/student.interface';
 import { StudentInput, studentSchemaZod } from '../validator/student.validator';
 
 // mongoose validation

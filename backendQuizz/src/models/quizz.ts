@@ -1,48 +1,6 @@
-// Import ZOD library for schema validation
-import { z } from 'zod';
 // Import mongoose and necessary types for MongoDB interaction
-import mongoose, { Document, Schema } from 'mongoose';
-
-/**
- * Zod Validation Schema
- * validates input data when creating / updating quizzes
- */
-const quizSchemaZod = z.object({
-  title: z
-    .string()
-    .min(1, { message: 'Title is required' })
-    .max(100, { message: 'Title cannot exceed 100 characters' }),
-
-  quizCode: z
-    .string()
-    .min(3, { message: 'Quiz code must be at least 3 characters' })
-    .max(20, { message: 'Quiz code cannot exceed 20 characters' }),
-
-  duration: z
-    .number()
-    .min(1, { message: 'Duration must be at least 1 minute' })
-    .max(300, { message: 'Duration cannot exceed 300 minutes' }),
-});
-
-/**
- * TypeScript Type for Quiz Input
- * Automatically generated from the Zod schema
- */
-export type QuizInput = z.infer<typeof quizSchemaZod>;
-
-/**
- * Mongoose Document Interface
- * Defines the structure of quiz documents in MongoDB
- */
-
-interface IQuiz extends Document {
-  title: String;
-  quizCode: string;
-  duration: number;
-  questions: mongoose.Types.ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+import mongoose, { Schema, model } from 'mongoose';
+import { IQuiz } from './interfaces/quiz.interface';
 
 /**
  * Mongoose Schema Definition
@@ -113,6 +71,4 @@ quizSchema.pre('save', async function (next) {
 
 // export the mongoose model
 
-const QuizModel = mongoose.model<IQuiz>('Quiz', quizSchema);
-
-export { QuizModel, quizSchema, quizSchemaZod };
+export const Quiz = model<IQuiz>('Quiz', quizSchema);

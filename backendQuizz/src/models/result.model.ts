@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IResult, IResultModel } from '../interfaces/result.interface';
+import { IResult, IResultModel } from './interfaces/result.interface';
 import { ResultInput, resultSchemaZod } from '../validator/result.validator';
 
 const resultSchema = new Schema<IResult, IResultModel>(
@@ -22,12 +22,12 @@ const resultSchema = new Schema<IResult, IResultModel>(
       min: [0, 'Score cannot be negative'],
       max: [100, 'Score cannot exceed 100%'],
     },
-    totalQuestion: {
+    totalQuestions: {
       type: Number,
       required: [true, 'Total question count is required '],
       min: [1, 'At least one question is required '],
     },
-    SubmittedAt: {
+    submittedAt: {
       type: Date,
       default: Date.now,
       immutable: true,
@@ -52,6 +52,12 @@ resultSchema.statics.createResult = async function (resultData: ResultInput) {
   const validatedData = resultSchemaZod.parse(resultData);
   return this.create({
     ...validatedData,
-    studentId: new mongoose.Types.ObjectId(validatedData),
+    studentId: new mongoose.Types.ObjectId(validatedData.studentId),
+    quizId: new mongoose.Types.ObjectId(validatedData.quizId),
   });
 };
+
+export const Result = mongoose.model<IResult, IResultModel>(
+  'Result',
+  resultSchema
+);
