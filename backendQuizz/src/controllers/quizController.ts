@@ -8,9 +8,13 @@ import asyncHandler from 'express-async-handler';
 //@route         POST/api/v1/quizzes
 // @access        public
 export const createQuiz = asyncHandler(
-  async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  async (
+    req: Request<{}, {}, QuizInput>,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    // 1.validate input with zod
     const parseResult = quizSchemaZod.safeParse(req.body);
-
     if (!parseResult.success) {
       const errors = parseResult.error.errors.map((err) => ({
         path: err.path.join('.'),
@@ -27,7 +31,7 @@ export const createQuiz = asyncHandler(
     const validatedData = parseResult.data;
     const { title, quizCode, duration } = validatedData;
 
-    // check for  duplicate quiz code
+    // 2.check for  duplicate quiz code
 
     const existingQuiz = await Quiz.findOne({ quizCode });
     if (existingQuiz) {
@@ -35,18 +39,18 @@ export const createQuiz = asyncHandler(
         success: false,
         message: `quiz code ${quizCode} already exists`,
       });
+      return;
     }
 
-    // create new Quiz
+    // 3.create new Quiz
     const newQuiz = await Quiz.create({
       title,
       quizCode,
       duration,
       questions: [],
-      createdAt: new Date(),
     });
 
-    // Return success response with selected fields
+    // send  response with selected fields
 
     res.status(201).json({
       success: true,
@@ -56,7 +60,7 @@ export const createQuiz = asyncHandler(
         title: newQuiz.title,
         quizCode: newQuiz.quizCode,
         duration: newQuiz.duration,
-        questionCount: 0,
+        questionCount: newQuiz.questions?.length || 0,
         createdAt: newQuiz.createdAt,
       },
     });
@@ -79,6 +83,7 @@ export const getAllQuiz = asyncHandler(
         message: 'no quiz found ',
         data: [],
       });
+      return;
     }
 
     res.status(200).json({
