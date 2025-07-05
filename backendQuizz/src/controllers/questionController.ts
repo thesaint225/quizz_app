@@ -1,10 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import asyncHandler from "express-async-handler";
-import {
-  QuestionsModel,
-  questionZodSchema,
-  // IQuestions,
-} from "../models/questionsModels";
+import { Request, Response, NextFunction } from 'express';
+import asyncHandler from 'express-async-handler';
+import { QuestionsModel } from '../models/questionsModels';
+import { questionZodSchema } from '../schemas/validation/question.validation';
 
 // @description  create new question for quiz
 // @route     POST/api/v1/questions
@@ -20,7 +17,7 @@ export const createQuestion = asyncHandler(
     if (!parseResult.success) {
       const formattedErrors = parseResult.error.errors.map((err) => ({
         //show which field failed
-        field: err.path.join("."),
+        field: err.path.join('.'),
         // human readable error message
         message: err.message,
         // standardized error code
@@ -28,7 +25,7 @@ export const createQuestion = asyncHandler(
       }));
       res.status(400).json({
         success: false,
-        message: "Quiz validation failed",
+        message: 'Quiz validation failed',
         errors: formattedErrors,
       });
       return;
@@ -42,7 +39,7 @@ export const createQuestion = asyncHandler(
     const question = await QuestionsModel.create(validatedQuestion);
     res.status(201).json({
       success: true,
-      message: "Question created successfully ",
+      message: 'Question created successfully ',
       data: question,
     });
   }
@@ -60,7 +57,7 @@ export const getAllQuestions = asyncHandler(
     if (!allQuestions || allQuestions.length === 0) {
       res.status(200).json({
         success: true,
-        message: "no questions found  ",
+        message: 'no questions found  ',
         data: [],
       });
       return;

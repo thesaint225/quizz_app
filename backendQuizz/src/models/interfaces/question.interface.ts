@@ -1,10 +1,9 @@
 import mongoose, { Document } from 'mongoose';
-
-export interface Iquestion extends Document {
+export interface IQuestion extends Document {
   quizId: mongoose.Types.ObjectId;
   text: string;
   options: string[];
   correct: string;
-  createdAT?: Date;
+  createdAt?: Date;
   updatedAt?: Date;
 }

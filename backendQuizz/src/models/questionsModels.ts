@@ -1,56 +1,8 @@
 // Import Zod library for schema validation
 import { z } from 'zod';
-// Import mongoose and necessary types for MongoDB interaction
-import mongoose, { Document, Schema } from 'mongoose';
+import { IQuestion } from './interfaces/question.interface';
+import mongoose, { Schema } from 'mongoose';
 
-/**
- * ZOD VALIDATION
- * this define the validation rules for question data before it
- * reaches the database
- */
-
-const questionZodSchema = z
-  .object({
-    quizId: z.string().min(1, { message: 'Quiz ID is required' }),
-    // validate "text" field must  be non-empty string
-    text: z.string().min(1, { message: 'Question text is required' }),
-    // validate "options" must be an array with at least 2 string
-    options: z
-      .array(z.string())
-      .min(2, { message: 'At least two options are required' }),
-    correct: z.string().min(1, { message: 'Correct answer is required' }),
-  })
-  .refine((data) => data.options.includes(data.correct), {
-    path: ['correct'],
-    message: 'Correct answer must be one of the options',
-  });
-
-/**
- * TYPESCRIPT TYPE
- * Create a TypeScript type based on the zod schema for
- * type-safe development
- */
-
-export type QuestionInput = z.infer<typeof questionZodSchema>;
-
-/**
- * MONGOOSE INTERFACE
- * Defines the structure of a question document with
- * TypeScript support
- */
-
-export interface IQuestion extends Document {
-  quizId: mongoose.Types.ObjectId;
-  text: string;
-  options: string[];
-  correct: string;
-  createdAT?: Date;
-  updatedAt?: Date;
-}
-/**
- * MONGOOSE SCHEMA
- * Defines how questions are stored in MongoDB with validation
- */
 const questionSchema = new Schema<IQuestion>(
   {
     quizId: {
@@ -132,4 +84,4 @@ questionSchema.pre('findOneAndUpdate', async function (next) {
 
 const QuestionsModel = mongoose.model<IQuestion>('Question', questionSchema);
 
-export { questionSchema, QuestionsModel, questionZodSchema };
+export { questionSchema, QuestionsModel };
