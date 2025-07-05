@@ -6,14 +6,6 @@ export interface IQuiz extends Document {
   questions: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
-}
 
-/**
- * Virtual Property: questionCount
- * Returns the number of questions without loading all question documents
- */
-declare module 'mongoose' {
-  interface IQuiz {
-    questionCount: number;
-  }
+  questionCount?: number;
 }
