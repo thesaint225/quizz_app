@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
 import { QuestionsModel } from '../models/questionsModels';
 import { questionZodSchema } from '../schemas/validation/question.validation';
+import { QuestionInput } from '../schemas/types/question.type';
 import { ZodIssue } from 'zod';
 
 // @description  create new question for quiz
