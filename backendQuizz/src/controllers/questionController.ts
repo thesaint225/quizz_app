@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
 import { QuestionsModel } from '../models/questionsModels';
 import { questionZodSchema } from '../schemas/validation/question.validation';
+import { ZodIssue } from 'zod';
 
 // @description  create new question for quiz
 // @route     POST/api/v1/questions
@@ -15,7 +16,7 @@ export const createQuestion = asyncHandler(
 
     // if validation fails return error
     if (!parseResult.success) {
-      const formattedErrors = parseResult.error.errors.map((err) => ({
+      const formattedErrors = parseResult.error.errors.map((err: ZodIssue) => ({
         //show which field failed
         field: err.path.join('.'),
         // human readable error message

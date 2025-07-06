@@ -1,5 +1,5 @@
 import { z } from 'zod';
-const questionZodSchema = z
+export const questionZodSchema = z
   .object({
     quizId: z.string().min(1, { message: 'Quiz ID is required' }),
     // validate "text" field must  be non-empty string
