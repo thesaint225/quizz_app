@@ -2,8 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
 import { QuestionsModel } from '../models/questionsModels';
 import { questionZodSchema } from '../schemas/validation/question.validation';
-import { QuestionInput } from '../schemas/types/question.type';
+import { QuestionInput, QuestionOutput } from '../schemas/types/question.type';
 import { ZodIssue } from 'zod';
+import mongoose from 'mongoose';
 
 // @description  create new question for quiz
 // @route     POST/api/v1/questions
@@ -39,10 +40,25 @@ export const createQuestion = asyncHandler(
     // if validation is successfully create question
 
     const question = await QuestionsModel.create(validatedQuestion);
+
+    if (!question.createdAt || !question.updatedAt) {
+      throw new Error('Missing timestamps on question document');
+    }
+
+    const questionOutput: QuestionOutput = {
+      _id: (question._id as mongoose.Types.ObjectId).toString(),
+      text: question.text,
+      options: question.options,
+      correct: question.correct,
+      quizRef: question.quizId.toString(),
+      createdAt: question.createdAt,
+      updatedAt: question.updatedAt,
+    };
+
     res.status(201).json({
       success: true,
       message: 'Question created successfully ',
-      data: question,
+      data: questionOutput,
     });
   }
 );
@@ -65,10 +81,25 @@ export const getAllQuestions = asyncHandler(
       return;
     }
 
+    const questionOutputList: QuestionOutput[] = allQuestions.map((q) => {
+      if (!q.createdAt || !q.updatedAt) {
+        throw new Error('Missing timestamp on a question document');
+      }
+      return {
+        _id: (q._id as mongoose.Types.ObjectId).toString(),
+        text: q.text,
+        options: q.options,
+        correct: q.correct,
+        quizRef: q.quizId.toString(),
+        createdAt: q.createdAt,
+        updatedAt: q.updatedAt,
+      };
+    });
+
     res.status(200).json({
       success: true,
-      count: allQuestions.length,
-      data: allQuestions,
+      count: questionOutputList.length,
+      data: questionOutputList,
     });
   }
 );
