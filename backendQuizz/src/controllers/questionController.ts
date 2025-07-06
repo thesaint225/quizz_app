@@ -34,7 +34,7 @@ export const createQuestion = asyncHandler(
     }
     // 2.EXTRACT VALIDATED DATA
     // destructure from the validated data
-    const { data: validatedQuestion } = parseResult;
+    const { data: validatedQuestion }: { data: QuestionInput } = parseResult;
 
     // if validation is successfully create question
 
