@@ -71,4 +71,5 @@ quizSchema.pre('save', async function (next) {
 
 // export the mongoose model
 
-export const Quiz = mongoose.models.Quiz || model<IQuiz>('Quiz', quizSchema);
+export const QuizModels =
+  mongoose.models.Quiz || model<IQuiz>('Quiz', quizSchema);

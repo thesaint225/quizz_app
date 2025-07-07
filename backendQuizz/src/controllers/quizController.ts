@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { Quiz } from '../models/quizz';
+import { QuizModels } from '../models/quizz';
 import { quizSchemaZod } from '../schemas/validation/quiz.validation';
-import { QuizInput } from '../schemas/types/quiz.type';
+import { QuizInput, QuizOutput } from '../schemas/types/quiz.type';
 import asyncHandler from 'express-async-handler';
+import mongoose from 'mongoose';
 
 // @description   createQuiz
 //@route         POST/api/v1/quizzes
@@ -33,7 +34,7 @@ export const createQuiz = asyncHandler(
 
     // 2.check for  duplicate quiz code
 
-    const existingQuiz = await Quiz.findOne({ quizCode });
+    const existingQuiz = await QuizModels.findOne({ quizCode });
     if (existingQuiz) {
       res.status(409).json({
         success: false,
@@ -43,26 +44,30 @@ export const createQuiz = asyncHandler(
     }
 
     // 3.create new Quiz
-    const newQuiz = await Quiz.create({
+    const createQuiz = await QuizModels.create({
       title,
       quizCode,
       duration,
       questions: [],
     });
 
+    // .format response using QuizOutput type
+    const QuizOutput: QuizOutput = {
+      _id: (createQuiz._id as mongoose.Types.ObjectId).toString(),
+      title: createQuiz.title,
+      quizCode: createQuiz.quizCode,
+      duration: createQuiz.duration,
+      questionCount: createQuiz.questions?.length || 0,
+      createdAt: createQuiz.createAt,
+      updatedAt: createQuiz.updatedAt,
+    };
+
     // send  response with selected fields
 
     res.status(201).json({
       success: true,
       message: 'Quiz created successfully',
-      data: {
-        id: newQuiz._id,
-        title: newQuiz.title,
-        quizCode: newQuiz.quizCode,
-        duration: newQuiz.duration,
-        questionCount: newQuiz.questions?.length || 0,
-        createdAt: newQuiz.createdAt,
-      },
+      data: QuizOutput,
     });
   }
 );
@@ -73,7 +78,7 @@ export const createQuiz = asyncHandler(
 
 export const getAllQuiz = asyncHandler(
   async (_req: Request, res: Response, _next: NextFunction) => {
-    const allQuiz = await Quiz.find();
+    const allQuiz = await QuizModels.find();
 
     // Add a fallback when allQuiz is empty
 
@@ -83,13 +88,30 @@ export const getAllQuiz = asyncHandler(
         message: 'no quiz found ',
         data: [],
       });
-      return;
     }
+
+    // Convert each quiz document from the database into a clean, structured object
+    // that only includes the fields defined in the QuizOutput type.
+    // This helps control what data gets sent back to the frontend.
+
+    const quizOutputList: QuizOutput[] = allQuiz.map((quiz) => {
+      if (quiz.createAt || quiz.updated)
+        throw new Error("'Missing timestamp on a question document'");
+      return {
+        _id: (quiz._id as mongoose.Types.ObjectId).toString(),
+        title: quiz.title,
+        quizCode: quiz.quizCode,
+        duration: quiz.duration,
+        questionCount: quiz.questions?.length || 0,
+        createdAt: quiz.createAt,
+        updatedAt: quiz.updatedAt,
+      };
+    });
 
     res.status(200).json({
       success: true,
-      count: allQuiz.length,
-      data: allQuiz,
+      count: quizOutputList.length,
+      data: quizOutputList,
     });
   }
 );
