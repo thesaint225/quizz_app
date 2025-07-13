@@ -1,7 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IResult, IResultModel } from './interfaces/result.interface';
-import { ResultInput, resultSchemaZod } from '../validator/result.validator';
-
+import { resultSchemaZod } from '../validator/result.validator';
 const resultSchema = new Schema<IResult, IResultModel>(
   {
     studentId: {

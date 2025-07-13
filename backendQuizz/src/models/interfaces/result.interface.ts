@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Document, Model } from 'mongoose';
-import { ResultInput } from '../../validator/result.validator';
+import { ResultInput } from '../../schemas/types/result.type';
 
 export interface IResult extends Document {
   studentId: mongoose.Types.ObjectId;
