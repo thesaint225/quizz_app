@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import { quizIdSchema } from '../schemas/quiz.schema';
-import { Quiz } from '../models/quizz';
+import { QuizModels } from '../models/quizz';
 
 interface CustomRequest extends Request {
   quiz?: mongoose.Document; //Attach quiz to request
@@ -25,7 +25,7 @@ export const validateQuizId = async (
     }
 
     // 2.Check if quiz exists in database
-    const quiz = await Quiz.findById(quizId);
+    const quiz = await QuizModels.findById(quizId);
     if (!quiz) {
       return res.status(404).json({
         error: `Quiz with ID ${quizId} not found`,

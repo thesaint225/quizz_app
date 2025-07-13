@@ -23,4 +23,4 @@ export const resultSchemaZod = z.object({
   percentage: z.number().min(0).max(100).optional(),
 });
 
-export type ResultInput = z.infer<typeof resultSchemaZod>;
+

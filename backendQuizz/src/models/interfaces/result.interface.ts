@@ -14,5 +14,5 @@ export interface IResult extends Document {
 }
 
 export interface IResultModel extends Model<IResult> {
-  createResult(resultData: ResultInput): Promise<IResult>;
+  createStudentResult(resultData: ResultInput): Promise<IResult>;
 }
