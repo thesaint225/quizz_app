@@ -13,14 +13,14 @@ const quizSchema = new Schema<IQuiz>(
       type: String,
       required: [true, 'Title is required'],
       trim: true,
-      maxlength: [100, 'Title cannot exceed 100 characters'],
+      maxLength: [100, 'Title cannot exceed 100 characters'],
     },
     quizCode: {
       type: String,
       required: [true, 'Quiz code is required'],
       unique: true,
       minlength: [3, 'Quiz code must be at least 3 characters'],
-      maxlength: [20, 'Quiz code cannot exceed 20 characters'],
+      maxLength: [20, 'Quiz code cannot exceed 20 characters'],
     },
     duration: {
       type: Number,

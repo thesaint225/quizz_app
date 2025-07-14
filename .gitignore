@@ -2,3 +2,6 @@
 .node_modules/
 .env
 .bcrypt-password-hash/
+src/minEx.ts
+
+

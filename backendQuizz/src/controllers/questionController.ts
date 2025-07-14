@@ -68,7 +68,7 @@ export const createQuestion = asyncHandler(
 // @access          public
 
 export const getAllQuestions = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, _next: NextFunction) => {
     const allQuestions = await QuestionsModel.find();
 
     // please add a fallback when question is empty

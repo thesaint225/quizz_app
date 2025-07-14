@@ -214,3 +214,7 @@ Mongoose validates schema →
 Pre-hooks run final checks →
 
 Data saved to MongoDB"
+
+iam done with
+-question  
+-quiz
